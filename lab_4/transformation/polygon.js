@@ -11,12 +11,23 @@ class Polygon {
     endShape(CLOSE)
   }
   /**
-   * Draws a polygon reflected about the given line
-   * @param {number} m Slope of the line
-   * @param {number} c y-intercept of the line
+   * Draws reflection about given param
+   * @param {"x"|"y"|"xy"|"o"} about
    */
-  drawReflected(m = 1, c = 0) {
-    // extended_line(m, c)
+  drawReflected(about) {
+    const homogeneousCoords = this.getHomogeneousCoordinates()
+    const [color, reflectionMatrix] = this._getReflectionMatrix(about)
+    const multipliedMatrix = this._multiplyMatrices(
+      reflectionMatrix,
+      homogeneousCoords,
+    )
+    const shearedPoints = this.getPointsFromHomogeneousCoords(multipliedMatrix)
+    stroke(color)
+    fill(color)
+    beginShape()
+    shearedPoints.forEach(e => vertex(e.x, e.y))
+    endShape(CLOSE)
+    noFill()
   }
   drawSheared(sx, sy) {
     const homogeneousCoords = this.getHomogeneousCoordinates()
@@ -31,7 +42,49 @@ class Polygon {
     shearedPoints.forEach(e => vertex(e.x, e.y))
     endShape(CLOSE)
   }
-
+  /**
+   * @param {"x"|"y"|"xy"|"o"} type
+   */
+  _getReflectionMatrix(type) {
+    switch (type) {
+      case 'x':
+        return [
+          'red',
+          [
+            [1, 0, 0],
+            [0, -1, 0],
+            [0, 0, 1],
+          ],
+        ]
+      case 'y':
+        return [
+          'green',
+          [
+            [-1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
+          ],
+        ]
+      case 'xy':
+        return [
+          'orange',
+          [
+            [0, 1, 0],
+            [1, 0, 0],
+            [0, 0, 1],
+          ],
+        ]
+      case 'o':
+        return [
+          'purple',
+          [
+            [-1, 0, 0],
+            [0, -1, 0],
+            [0, 0, 1],
+          ],
+        ]
+    }
+  }
   _getShearedMatrix(sx, sy) {
     return [
       [1, sx, 0],
