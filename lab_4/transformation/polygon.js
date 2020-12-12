@@ -5,10 +5,11 @@ class Polygon {
   draw() {
     strokeWeight(2)
     stroke('black')
+    fill('black')
     beginShape()
     this.vertices.forEach(e => vertex(e.x, e.y))
-
-    endShape(CLOSE)
+    endShape()
+    noFill()
   }
   /**
    * Draws reflection about given param
@@ -38,9 +39,11 @@ class Polygon {
     )
     const shearedPoints = this.getPointsFromHomogeneousCoords(multipliedMatrix)
     stroke('green')
+    fill('green')
     beginShape()
     shearedPoints.forEach(e => vertex(e.x, e.y))
     endShape(CLOSE)
+    noFill()
   }
   /**
    * @param {"x"|"y"|"xy"|"o"} type
